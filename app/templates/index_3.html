@@ -1,0 +1,1889 @@
+{% extends "base.html" %}
+{% block app_content %}
+<div class='container'>
+    <div id='sections'>
+        <div id='dashboard' class='hidden section'>
+          <h1 class='text-center p-4'>Dashboard</h1>
+          <div class='d-flex justify-content-evenly p-3'>
+            <input class='p-3 btn reversed-primary-button view view_brand' value='Scrape brand'></input>
+            <input class='p-3 btn reversed-primary-button view view_brand_list' value='My brands'></input>
+          </div>
+        </div>
+        <div id='brand_list' class='hidden section'>
+          <div class='alerts py-3 hidden'>
+                <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+          </div>
+          <div class='col-12 d-flex justify-content-between'>
+            <p class='fs-3 p-5 fw-bold m-0 view view_dashboard reversed-primary-color' style='cursor: pointer;'>
+              <i class="fas fa-arrow-alt-square-left"></i> Back
+            </p>
+          </div>
+          <p class='fs-4 text-center py-4'>My Brands</p>
+          <ul class='list-group' id='brand_list_list'>
+          </ul>
+        </div>
+        <div id='sitebrand_list' class='hidden section'>
+          <div class='alerts py-3 hidden'>
+            <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+          </div>
+          <p class='fs-4 text-center py-4'>Brands on <span class='site'></span></p>
+          <ul class='list-group' id='sitebrand_list_list'>
+          </ul>
+        </div>
+        <div id='page_view' class='hidden section'>
+          <span class='page_id hidden'></span>
+          <div class='alerts py-3 hidden'>
+                <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+          </div>
+          <div class='col-12 d-flex justify-content-between'>
+            <p class='fs-3 p-5 fw-bold m-0 view view_sku_view reversed-primary-color' style='cursor: pointer;'>
+              <i class="fas fa-arrow-alt-square-left"></i> Back
+            </p>
+          </div>
+          <p class='fs-2 text-center py-4 sku_name'></p>
+          <p class='fs-3 text-center'>on<br><br><span class='site_name'></span></p>
+          <p class='fs-4 text-end current'>Modified at <span class='modified'></span><span class='reload'> <i class="fas fa-sync reversed-primary-color"></i></span></p>
+          <p class='fs-4 text-end updating hidden'>Updating...</p>
+          <ul class='list-group list_images'>
+          </ul>
+          <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+              <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+          </div>
+        </div>
+        <div id='sku_view' class='hidden section'>
+          <span class='sku_id hidden'></span>
+          <div class='alerts py-3 hidden'>
+                <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+          </div>
+          <div class='col-12 d-flex justify-content-between'>
+            <p class='fs-3 p-5 fw-bold m-0 view view_brand_view reversed-primary-color' style='cursor: pointer;'>
+              <i class="fas fa-arrow-alt-square-left"></i> Back
+            </p>
+          </div>
+          <div class='col-12 text-center sku_image'></div>
+          <p class='fs-4 text-center py-4 sku_name'></p>
+          <p class='fs-3 text-center'>on</p>
+          <ul class='list-group sitebrand_list'>
+          </ul>
+        </div>
+        <div id='brand_view' class='hidden section'>
+          <div class='alerts py-3 hidden'>
+                <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+          </div>
+          <div class='col-12 d-flex justify-content-between'>
+            <p class='fs-3 p-5 fw-bold m-0 view view_brand_list reversed-primary-color' style='cursor: pointer;'>
+              <i class="fas fa-arrow-alt-square-left"></i> Back
+            </p>
+          </div>
+          <p class='fs-4 text-center py-4' id='brand_view_name'></p>
+          <ul class='list-group list_skus'>
+          </ul>
+        </div>
+        <div id='brand' class='hidden section'>
+          <div class='alerts py-3 hidden'>
+                <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+          </div>
+          <div class='col-12 d-flex justify-content-between'>
+            <p class='fs-3 p-5 fw-bold m-0 view view_dashboard reversed-primary-color' style='cursor: pointer;'>
+              <i class="fas fa-arrow-alt-square-left"></i> Back
+            </p>
+          </div>
+          <form class='row g-3 p-3'>
+                  <label class='py-4 form-label fs-2 text-center' for='brand_name'>Brand</label>
+                  <div class='col-md-6 offset-md-3 py-4'><input class="form-control text form-control-lg text-center" type="text" placeholder="" aria-label=".form-control-lg example" id='brand_name'></input>
+                  <div class='valid-feedback'>Looks good!</div>
+                  <div class='invalid-feedback'>Name required!</div>
+                  <br>
+                  <hr>
+                  </div>
+                  <label class='py-4 form-label fs-2 text-center'>Sites</label>
+                  <div class='sites row d-flex justify-content-evenly py-5'>
+                    <div id='brand_site_1' class='col-3 select_site rounded primary-border border border-5 position-relative' style='cursor:pointer;'>
+                      <span class="hidden badge bg-success position-absolute top-0 start-100 translate-middle">&#x2713;</span>
+                      <span>
+                        <img src="/static/walmart logo.png" style='height: 100%; width: 100%; object-fit: contain;' class='py-4'/>
+                      </span>
+                    </div>
+                    <div id='brand_site_2' class='col-3 select_site rounded primary-border border border-5 position-relative' style='cursor:pointer;'>
+                      <span class="hidden badge bg-success position-absolute top-0 start-100 translate-middle">&#x2713;</span>
+                      <span>
+                        <img src="/static/amazon logo.png" style='height: 100%; width: 100%; object-fit: contain;' class='py-4'/>
+                      </span>
+                    </div>
+                  </div>
+                  <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='brand_scrape' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Scrape'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+                </div>
+                </form>
+        </div>
+        <div id='walmart' class='hidden section'>
+            <div class='alerts py-3 hidden'>
+                <div class='error hidden py-3 alert-primary text-center'>Error! Please try again!</div>
+            </div>
+            <form class='row g-3 p-3 heading'>
+                <div class='row py-4'><div class='col-md-4'><input type='button' class='btn primary-button show_all hidden' value='All Walmart SKUs'></div></div>
+                <label class='form-label fs-3 text-center'>Enter Walmart Item ID:</label>
+                <input class="form-control string foreign_id form-control-lg text-center" type="text" placeholder="" aria-label=".form-control-lg example" id='walmart_foreign_id'></input>
+                <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='walmart_scrape' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Scrape'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+                </div>
+            </form>
+            <div id='walmart_content' class='row content mt-4'>
+                <div id='walmart_page' class='page row content_section hidden'>
+                    <span class='page_id hidden'></span>
+                    <p class='col-12 text-start'>Walmart SKU ID: <span class='foreign_id'></span></p>
+                    <p><a class='col-12 text-start url' href='https://www.walmart.com/'>Walmart.com</a></p>
+                    <p class='col-12 text-start'>Refreshed: <span class='modified'></span><span class='reload'><i class="fas fa-sync reversed-primary-color"></i></span></p>
+                    <ul class='list-group list_images pt-5'>
+                    </ul>
+                </div>
+                <div id='walmart_site' class='site row content_section all'>
+                    <p class='fs-4 text-center py-4'>Walmart Scraped Pages</p>
+                    <div class='list_pages'>
+                    </div>
+                    <div class='pag_section'>
+                      <div class="p-3 d-flex flex-row pagination justify-content-center">
+                          <p class="prev pag static">&laquo;</p>
+                          <div class='pages flex-row d-flex overflow-auto'>
+                          </div>
+                          <p class="next pag static">&raquo;</p>
+                      </div>
+                        <p class='showing_rows text-center'></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id='homepage' class='hidden section col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3'>
+            <div class='alerts py-3 hidden'>
+                  <div class="access hidden col-12 alert alert-primary text-center">
+                    Your request has been recorded. A team member will reach out ASAP.
+                  </div>
+            </div>
+            <div class='row align-items-center gy-5 mt-5'>
+              <div class='col-12 text-center d-flex justify-content-center'>
+                <div class='row gy-5'>
+                  <h1 class="display-2">SKU Perfect</h1>
+                  <p class="lead fs-4">Optimize your brand's content and pricing across ecommerce retailers. </p>
+                </div>
+              </div>
+              <div class='col-12 pt-5 pt-md-3'>
+                <button type='button' class='col-8 offset-2 col-md-4 offset-md-4 py-3 reversed-primary-button active btn view view_access'>Request access</button>
+              </div>
+              <div class='col-12'>
+                  <hr class='m-5'>
+              </div>
+            </div>
+            <div class='row' id='hp_tiles'>
+                    <div class="col-md-6 hp_text">
+                      <div class="py-5 pe-5 pe-md-0 ps-5">
+                        <h2 class="display-4">Boost conversion</h2>
+                        <p>
+                          Increase conversion by identifying price losers and poor content.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-6 primary-color hp_icon">
+                      <div class="p-5 myicon my-4">
+                        <i class="far fa-money-bill-wave fa-5x"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-6 hp_text">
+                      <div class="py-5 ps-5 ps-md-0 pe-5">
+                        <h2 class="display-4">Quick onboarding</h2>
+                        <p>
+                            SKU Perfect scrapes ecommerce retailers for brand related keywords to compile your assortment, so there's nothing to setup.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-6 primary-color hp_icon">
+                      <div class="p-5 myicon my-0 my-md-4 ">
+                        <i class="far fa-rabbit-fast fa-5x"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-6 hp_text">
+                      <div class="py-5 pe-5 pe-md-0 ps-5">
+                        <h2 class="display-4">Custom reports</h2>
+                        <p>Schedule custom reports to track your content and pricing.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6 primary-color hp_icon">
+                      <div class="p-5 myicon my-0 my-md-4">
+                        <i class="far fa-file-chart-line fa-5x"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-6 hp_text">
+                      <div class="py-5 ps-5 ps-md-0 pe-5">
+                        <h2 class="display-4">AI driven pricing</h2>
+                        <p>SKU Perfect tracks competitive brands and 3P sellers to identify price losers and suggest solutions.</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6 primary-color hp_icon">
+                      <div class="p-5 myicon my-0 my-md-4">
+                        <i class="far fa-user-robot fa-5x"></i>
+                      </div>
+                    </div>
+                  <div class="col-md-6 hp_text">
+                    <div class="py-5 pe-5 pe-md-0 ps-5">
+                      <h2 class="display-4">Image scanning</h2>
+                      <p>Quickly scan images for resolution and consistency across retailers.</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6 primary-color hp_icon">
+                    <div class="p-5 myicon my-0 my-md-4">
+                      <i class="far fa-images fa-5x"></i>
+                    </div>
+                  </div>
+              </div>
+              <footer class="py-5">
+                    <p class="m-0 text-center text-white small" style='color: #44557e!important;'>Copyright &copy; SKU Perfect 2021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" target=_blank>Terms and conditions</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" target=_blank>Privacy Policy</a></p>
+                </footer>
+
+        </div>
+
+        <div id='login' class='hidden section'>
+            <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_homepage reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='reversed-primary-color fs-1 text-center py-4 my-4'>
+                    <p>Sign In</p>
+                </div>
+                <div class='alerts py-3 hidden'>
+                  <div class="redirect hidden col-12 alert alert-primary text-center">
+                  Please log in to access this page.
+                  </div>
+                  <div class="success hidden col-12 alert alert-primary text-center">
+                  Registeration successful! Please log in to get started.
+                  </div>
+                  <div class='user_confirmed success hidden col-12 alert alert-primary text-center'>Email confirmed!</div>
+                  <div class='unconfirmed hidden col-12 alert alert-primary text-center'>We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.
+                  <br><br>
+                  If you do not receive a confirmation email, please check your spam folder.</div>
+                  <div class='invalid_link hidden col-12 alert alert-danger text-center'>Invalid link!</div>
+                  <div class='no_name hidden col-12 alert alert-primary text-center'>Please enter your email or username!</div>
+                  <div class='no_psw hidden col-12 alert alert-primary text-center'>Please enter your password!</div>
+                  <div class='invalid_email hidden alert col-12 alert-primary text-center'>There is no account with this email and password!</div>
+                  <div class='invalid_username hidden alert col-12 alert-primary text-center'>There is no account with this username!</div>
+                  <div class='invalid_password hidden alert col-12 alert-primary text-center'>Password incorrect!</div>
+                  <div class='reset_password hidden alert col-12 alert-primary text-center'>Password succesfully reset!</div>
+                </div>
+            </div>
+            <form class='row g-3'>
+                <div class='mb-3 form-floating'>
+                   <input class="form-control string form-control-lg" id='login_username' name='login_username' type='text' placeholder="username">
+                  <label class='form-label p-3' for='login_username'>Email address or username</label>
+                </div>
+                <div class='mb-3 form-floating'>
+                  <input id='login_psw' name='login_psw' type='password' placeholder="psw" class="form-control string form-control-lg">
+                  <label class='form-label p-3' for='login_psw'>Password</label>
+                  <p class='p-3 reversed-primary-color view view_forgot_password' style="cursor: pointer;">Forgot password?</p>
+                </div>
+                <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='login_submit' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Submit'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </div>
+            </form>
+        </div>
+        <div id='reset_password' class='section hidden'>
+          <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_homepage reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+          </div>
+          <div class='reversed-primary-color fs-2 fw-bold text-center py-3'>
+                    <p>Reset password</p>
+                </div>
+          <div class='alerts py-3 hidden'>
+            <div class='invalid_password hidden py-3 alert-primary text-center'>Please enter a valid password!</div>
+            <div class='password_no_match hidden py-3 alert-primary text-center'>Passwords must match!</div>
+            <div class='error hidden py-3 alert-primary text-center'>Unknown error</div>
+          </div>
+          <form class='row g-3 col-md-6 offset-md-3'>
+            <input class="form-control text fill_code form-control-lg hidden" id='reset_password_code' name='reset_password_code'>
+                  <div class='mb-3'>
+                    <label class='form-label p-3' for='reset_password_psw'>Password</label>
+                    <input class="form-control string form-control-lg" id='reset_password_psw' name='reset_password_psw' type='password'>
+                  </div>
+                <div class='mb-3'>
+                  <label class='form-label p-3' for='reset_password_psw2'>Repeat password</label>
+                  <input class="form-control string form-control-lg" id='reset_password_psw2' name='reset_password_psw2' type='password'>
+                </div>
+                <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='reset_password_submit' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Submit'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </div>
+                </form>
+
+        </div>
+        <div id='forgot_password' class='section hidden'>
+          <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_homepage reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='reversed-primary-color fs-2 fw-bold text-center py-3'>
+                    <p>Forgot Password</p>
+                </div>
+                <div class='alerts py-3 hidden'>
+                  <div class='invalid_email hidden py-3 alert-primary text-center'>There is no account associated with this email.</div>
+                  <div class='sent hidden py-3 alert-primary text-center'>A link to reset your password was sent to your email.</div>
+                </div>
+                <form class='row g-3 col-md-6 offset-md-3'>
+                  <div class='mb-3 form-floating'>
+                  <input class="form-control string form-control-lg" id='forgot_password_email' name='forgot_password_email' type='text' placeholder="email">
+                  <label class='form-label p-3' for='username'>Email</label>
+                </div>
+                <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='forgot_password_submit' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Submit'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </div>
+                </form>
+
+        </div>
+        <div id='register' class='section hidden'>
+            <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_homepage reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='reversed-primary-color fs-2 fw-bold text-center py-3'>
+                    <p>Register</p>
+                </div>
+                <div class='alerts py-3 hidden'>
+                    <div class='username hidden py-3 alert-primary text-center'>This username is already taken, please try another!</div>
+                    <div class='email_taken hidden py-3 alert-primary text-center'>An account already exists with this email!</div>
+                    <div class='invalid_email py-3 hidden alert-primary text-center'>Please enter a valid email address!</div>
+                    <div class='invalid_username hidden py-3 alert-primary text-center'>Please enter a valid username!</div>
+                    <div class='invalid_password hidden py-3 alert-primary text-center'>Please enter a valid password!</div>
+                    <div class='password_no_match hidden py-3 alert-primary text-center'>Passwords must match!</div>
+                    <div class='unkown_error hidden py-3 alert-primary text-center'>Unknown Error</div>
+                    <div class='invalid_demo_code hidden py-3 alert-primary text-center'>Please enter a valid demo code!</div>
+                </div>
+            </div>
+            <form class='row g-3'>
+               <input id='register_code' class='form-control text fill_code hidden' name='register_code' type='text'></input>
+              <fieldset disabled>
+                <div class='mb-3 form-floating'>
+                  <input class="form-control email fill_email form-control-lg" id='register_email' name='register_email' type='text' placeholder="email">
+                  <label class='form-label p-3' for='email'>Email</label>
+                </div>
+              </fieldset>
+                <div class='mb-3 form-floating'>
+                  <input class="form-control string form-control-lg" id='register_username' name='register_username' type='text' placeholder="username">
+                  <label class='form-label p-3' for='username'>Username</label>
+                </div>
+                <div class='mb-3 form-floating'>
+                  <input class="form-control string form-control-lg" id='register_psw' name='register_psw' type='password' placeholder="psw">
+                  <label class='form-label p-3' for='register_psw'>Password</label>
+                </div>
+                <div class='mb-3 form-floating'>
+                  <input class="form-control string form-control-lg" id='register_psw2' name='register_psw2' type='password' placeholder="psw">
+                  <label class='form-label p-3' for='register_psw2'>Password</label>
+                </div>
+                <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='register_submit' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Submit'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </div>
+                <div class='mb-3'>
+                  <p class='text-center'>Already have an account? <a href="#" class='view_login'>Click to login!</a></p>
+                </div>
+            </form>
+        </div>
+        <div id='account' class='section hidden'>
+          <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_homepage reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='reversed-primary-color fs-1 text-center py-4 my-4'>
+                    <p class='text-center text-capitalize fs-1'>{{ user.username }}</p>
+                </div>
+                <div class='alerts py-3 hidden'>
+                  <div class="success hidden py-3 alert-primary text-center" >
+                  Password successfully updated!
+                  </div>
+                    <div class='error hidden py-3 alert-primary text-center'>Please correct errors!</div>
+                    <div class='invalid_demo_code hidden py-3 alert-primary text-center'>Please enter a valid demo code!</div>
+                </div>
+
+            <div class='col-12 my-4'>
+                <div class='d-flex flex-wrap reversed-primary-color overflow-auto align-items-center rounded-3 view view_change_password' style='border-style:solid; cursor: pointer;'>
+                        <div class='p-3'><span class='fs-2 fw-bold'>Password</span></div>
+                        <div class='p-3 me-auto'><i class="fas fa-lock fa-2x"></i></div>
+                        <div class='p-3'><button class='btn primary-button account_button'>Change Password</button></div>
+                </div>
+            </div>
+            <div class='col-12 my-4'>
+                <div class='d-flex flex-wrap reversed-primary-color overflow-auto align-items-center view view_subscription rounded-3' style='border-style:solid; cursor: pointer;'>
+                        <div class='p-3'><span class='fs-2 fw-bold'>Subscription</span></div>
+                        <div class='p-3 me-auto'><i class="fas fa-user-circle fa-2x"></i></div>
+                        <div class='p-3'><button class='btn primary-button'>Subscription options</button></div>
+                </div>
+            </div>
+            <div class='col-12 my-4'>
+                <div class='d-flex flex-wrap reversed-primary-color overflow-auto align-items-center view view_settings rounded-3' style='border-style:solid; cursor: pointer;'>
+                        <div class='p-3'><span class='fs-2 fw-bold'>Settings</span></div>
+                        <div class='p-3 me-auto'><i class="fas fa-cog fa-2x"></i></div>
+                        <div class='p-3'><button class='btn primary-button'>Account Settings</button></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div id='subscription' class='section hidden'>
+           <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_account reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='py-4 my-4'>
+                  <p class='text-center fs-1 mb-4'>Subscription</p>
+                </div>
+                <div class='subscription_levels row text-center p-5'>
+            <div class='col-4'>
+            <div class='p-5 reversed-primary-color rounded-3' style='border-style:solid;'>
+              <p class='fs-2 fw-bold py-5'>Trial</p>
+              <button type="button" class='btn btn-lg primary-color'>Select</button>
+            </div>
+            </div>
+            <div class='col-4'>
+            <div class='p-5 reversed-primary-color rounded-3' style='border-style:solid;'>
+              <p class='fs-2 fw-bold py-5'>Basic</p>
+              <button type="button" class='btn btn-lg primary-color'>Select</button>
+            </div>
+            </div>
+            <div class='col-4'>
+            <div class='p-5 reversed-primary-color rounded-3' style='border-style:solid;'>
+              <p class='fs-2 fw-bold py-5'>Advanced</p>
+              <button type="button" class='btn btn-lg primary-color'>Select</button>
+            </div>
+            </div>
+          </div>
+            </div>
+        </div>
+        <div id='settings' class='section hidden'>
+           <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_account reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='py-4 my-4'>
+                  <p class='text-center fs-1 mb-4'>Settings</p>
+                </div>
+            </div>
+        </div>
+        <div id='change_password' class='section hidden'>
+          <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_account reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='py-4 my-4'>
+                    <p class='text-center fs-1 mb-4'>Change Password</p>
+                    <div class='alerts py-3 hidden'>
+                    <div class='error hidden py-3 alert-primary text-center'>Please correct errors!</div>
+                    <div class='no_psw hidden py-3 alert-primary text-center'>Please enter new password!</div>
+                    <div class='no_psw2 hidden py-3 alert-primary text-center'>Please confirm new password!</div>
+                    <div class='no_match hidden py-3 alert-primary text-center'>Passwords do not match!</div>
+                    <div class='success hidden py-3 alert-primary text-center'>Password succesfully changed!</div>
+                    </div>
+                    <form class='row g-3 text-start'>
+                      <div class='mb-3'>
+                        <label class='form-label p-3 fs-3' for='change_password_old_psw'>Old password</label>
+                        <input id='change_password_old_psw' name='old_psw' type='password' class="form-control string form-control-lg">
+                      </div>
+                      <div class='mb-3'>
+                        <label class='form-label p-3 fs-3' for='change_password_psw'>New password</label>
+                        <input id='change_password_psw' name='psw' type='password' class="form-control string form-control-lg">
+
+                      </div>
+                      <div class='mb-3'>
+                        <label class='form-label p-3 fs-3' for='change_password_psw2'>Repeat password</label>
+                        <input id='change_password_psw2' name='psw2' type='password' class="form-control string form-control-lg">
+                      </div>
+                      <div class='submit_box my-4'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='change_password_submit' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Submit'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+                </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <div id='access' class='section hidden'>
+            <div class='row pt-5 pb-3 mt-5'>
+                <div class='col-12 d-flex justify-content-between'>
+                    <p class='fs-3 p-3 fw-bold m-0 view view_homepage reversed-primary-color' style='cursor: pointer;'>
+                      <i class="fas fa-arrow-alt-square-left"></i> Back
+                    </p>
+                </div>
+                <div class='reversed-primary-color fs-1 text-center py-4 my-4'>
+                    <p>Request Access</p>
+                </div>
+                <div class='alerts py-3 hidden'>
+                    <div class='error hidden py-3 alert-primary text-center'>Please correct errors!</div>
+                    <div class='invalid_demo_code hidden py-3 alert-primary text-center'>Please enter a valid demo code!</div>
+                </div>
+            </div>
+            <form class='row g-3'>
+                <div class='mb-3'>
+                  <label for='access_first_name' class='form-label'>First name <span style="color: red;">*</span></label>
+                  <input id='access_first_name' class='form-control string'></input>
+                  <div class='valid-feedback'>Looks good!</div>
+                  <div class='invalid-feedback'>First name required!</div>
+                </div>
+                <div class='mb-3'>
+                  <label for='access_last_name' class='form-label'>Last name <span style="color: red;">*</span></label>
+                  <input id='access_last_name' class='form-control string'></input>
+                  <div class='valid-feedback'>Looks good!</div>
+                  <div class='invalid-feedback'>Last name required!</div>
+                </div>
+                <div class='mb-3'>
+                  <label for='access_email' class='form-label'>Email <span style="color: red;">*</span></label>
+                  <input id='access_email' class='form-control email'></input>
+                  <div class='valid-feedback'>Looks good!</div>
+                  <div class='invalid-feedback'>Email required!</div>
+                </div>
+                <div class='mb-3'>
+                  <label for='access_company_name' class='form-label'>Company name</label>
+                  <input id='access_company_name' class='form-control text'></input>
+                  <div class='valid-feedback'>Looks good!</div>
+                </div>
+                <div class='mb-3'>
+                  <label for='access_method' class='form-label'>How did you hear about us?</label>
+                  <select id='access_method' class='form-select text' aria-label='access_method'>
+                    <option value='' selected>Please select</option>
+                    <option value='0'>Referral</option>
+                    <option value='1'>Google</option>
+                    <option value='2'>Facebook</option>
+                    <option value='3'>LinkedIn</option>
+                  </select>
+                  <div class='valid-feedback'>Looks good!</div>
+                </div>
+                <div class='submit_box'>
+                    <div class='mb-3 submit'>
+                       <input type='button' id='access_submit' class='col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 submit_form btn btn-lg primary-button' value='Submit'>
+                    </div>
+                    <div class='row d-flex justify-content-center ps-5 my-4 loading_spinner'>
+                      <div class="spinner-border reversed-primary-color hidden" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+                </div>
+            </form>
+        </div>
+        <div id='admin' class='section hidden'>
+            <div class='row pt-5 pb-3 mt-5'>
+                <div class='me-auto p-2 align-self-center'>
+                <label>Show results</label>
+                <select class='rows' name="rows">
+                    <option value="5" selected="">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+                <table class='table'>
+                    <thead>
+                        <tr>
+                            <th scope="col">Approve</th>
+                            <th scope="col">Reject</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class='pag_section'>
+                  <div class="p-3 d-flex flex-row pagination justify-content-center">
+                      <p class="prev pag static">&laquo;</p>
+                      <div class='pages flex-row d-flex overflow-auto'>
+                      </div>
+                      <p class="next pag static">&raquo;</p>
+                  </div>
+                    <p class='showing_rows text-center'></p>
+                </div>
+                    </div>
+                </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block styles %}
+{{ super() }}
+{% endblock styles %}
+{% block scripts %}
+{{ super() }}
+<script>
+
+    function load_input_sku_scrape(){
+        return new Promise((resolve,reject) => {
+            try{
+                var item_id = $('#input_walmart_scrape').val();
+                resolve(item_id)
+            }catch{
+                reject('Missing Item ID!')
+            };
+        })
+    };
+
+
+
+
+    function changeContent(section_id,content_id){
+        $('#'+section_id)
+    }
+
+    //change section
+    function changeSection(section_id){
+        activeSection().then(old_section_id => {
+            $('#'+old_section_id).find('form').find(':input.is-valid').removeClass('is-valid');
+            $('#'+old_section_id).find('form').find(':input.is-invalid').removeClass('is-invalid');
+            $('#'+old_section_id).find('form').find(':input').not('.btn').val('');
+            hideAlerts(old_section_id);
+            hideAlerts(section_id)
+        })
+        $('#sections').children('.section').not('#'+section_id).not('.hidden').addClass('hidden');
+        $('#sections').children('#'+section_id+'.section.hidden').removeClass('hidden');
+        $([document.documentElement, document.body]).animate({scrollTop: 0}, 0);
+        return section_id
+    };
+
+    function activeSection(){
+        return new Promise((resolve,reject) => {
+            var active_id = $('#sections').children('.section').not('.hidden').attr('id');
+            resolve(active_id)
+        })
+    };
+
+    function loadChangeSection(element){
+        console.log(element)
+        return new Promise((resolve,reject) => {
+            var classes = $(element).attr("class").split(/\s+/);
+            var section_id = null
+            for(i=0;i<classes.length;i++){
+                var class_name = classes[i];
+                if(class_name.startsWith('view_') == true){
+                    var section_id = class_name.slice(5);
+                    resolve(section_id)
+                }
+            };
+            resolve(section_id)
+        })
+    }
+
+    $(document).on('click','.view',function(){
+        loadChangeSection(this).then(section_id => {
+            return changeSection(section_id)
+        })
+    })
+
+
+    //variables not to send to server
+
+
+
+    $('.select_site').on('click',function(){
+      if($(this).find('.badge').hasClass('hidden')){
+        $(this).find('.badge').removeClass('hidden');
+        $(this).removeClass('primary-border');
+        $(this).addClass('border-success');
+      }else{
+        $(this).find('.badge').addClass('hidden');
+        $(this).removeClass('border-success');
+        $(this).addClass('primary-border');
+      };
+    })
+    //handling forms
+    var site_pages = ['walmart'];
+
+    $('form').on('click','.submit_form',function(){
+        console.log('click')
+        var section = $(this).parentsUntil('.sections','.section').attr('id');
+        // console.log('Section: '+section)
+        validateForm(section=section).then(output => {
+
+                console.log('validateForm Output: '+output)
+                var passing = [];
+                for(i=0;i<output.length;i++){
+                    var x = output[i];
+                    console.log('X: '+x)
+                    var id = x['id'];
+                    console.log('ID: '+id)
+                    var validation = x['validation'];
+                    console.log('Validation: '+validation)
+                    if(validation == 'pass'){
+                        passing.push(validation);
+                     };
+                    delete x['validation']
+                };
+                // console.log(output)
+                // console.log(passing)
+                if(passing.length != output.length){
+                    // console.log('unequal')
+                    // console.log('form invalid')
+                    showAlert(section,'error')
+                    $('#'+section).find(':input.is-valid').removeClass('is-valid');
+                    var result = {'result':'fail','id':'error'}
+                }else{
+                    // console.log('equal')
+                    hideAlerts(section)
+                    // console.log($('#'+section).find(':input.is-invalid'))
+                    $('#'+section).find(':input.is-invalid').removeClass('is-invalid');
+                    var result = output;
+                };
+                return submitForm(section=section,data=result)
+            }).then(result => {
+               return resultForm(section=section,result=result)
+            }).catch(error => {
+                console.log(error)
+                stopSubmit(section)
+                showAlert(section,'error')
+            })
+    });
+
+    function toServer(section,data){
+        submitForm(section=section,data=data).then(result => {
+            return resultForm(section=section,result=result)
+        })
+    };
+
+    function walmartURL(item_id){
+        var url = "https://www.walmart.com/ip/"+item_id
+        return url
+    };
+
+    $('.foreign_id:input').on('change',function(){
+
+        var entered_foreign_id = $(this).val();
+        var current_foreign_id = $(this).parentsUntil('.section','.content').find('.foreign_id').val();
+
+        if($(this).hasClass('is-valid')){
+            $(this).removeClass('is-valid');
+        };
+        if($(this).hasClass('is-invalid')){
+            $(this).removeClass('is-invalid');
+        };
+
+        if(entered_foreign_id == current_foreign_id){
+            $(this).parentsUntil('#sections','.section').find('.submit_form').val('Reload');
+        }else{
+            $(this).parentsUntil('#sections','.section').find('.submit_form').val('Scrape');
+        }
+    })
+
+    $('.show_all').click(function(){
+        console.log($(this).parentsUntil('#sections','.section').find('.content'))
+        $(this).parentsUntil('#sections','.section').find('.content').children().not('.all').not('.hidden').addClass('hidden');
+        $(this).parentsUntil('#sections','.section').find('.content').children('.all.hidden').removeClass('hidden');
+        $(this).addClass('hidden');
+    })
+
+    function build_skus(brand_id=null,page=1,per_page=25,section=null){
+      load_skus(brand_id,page,per_page,section).then(result => {
+            console.log(result)
+            var count = result['count'];
+            write_skus(skus=result['skus'],section=result['section'])
+            pagination(per_page=result['per_page'],page=result['page'],count=result['count'],container=result['section']);
+          }
+        )
+    }
+
+
+    function load_skus(brand_id,page,per_page,section){
+      console.log('load_skus()')
+      console.log('brand_id: '+brand_id)
+      console.log('page: '+page)
+      console.log('per_page: '+per_page)
+      return new Promise((resolve,reject) => {
+        $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_skus') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'brand_id':brand_id,'per_page':per_page,'page':page,'section':section},null,'\t'),
+                success: function(result){
+                    resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('load_skus error: '+error)
+                }
+            })
+
+      })
+    }
+
+    function write_skus(skus,section){
+      console.log('write_skus()')
+      console.log(skus)
+      console.log(section)
+      return new Promise((resolve,reject) => {
+        var html_array = [];
+            for(i=0;i<skus.length;i++){
+                var sku = skus[i];
+                var file_name = sku['image_number'];
+                var html = '<li id="sku_id_'+sku['sku_id']+'" class="list-group-item sku_view" style="cursor:pointer;"><div class="row text-center d-flex align-items-center"><div class="col-6"><span class="name primary-text">'+sku['name']+'</span></div><div class="col-6"><img src="/static/images/'+file_name+'.jpg" class="p-3"></div></div></li>';
+                html_array.push(html);
+            };
+
+            var skus_html = html_array.join('')
+            $('#'+section).find('.list_skus').html(skus_html)
+      })
+    }
+
+    $("#brand_view").on('click','.sku_view',function(){
+      console.log('test')
+      var sku_id = $(this).attr('id').split('_')[2]
+      changeSection('sku_view')
+      build_sku_view(sku_id=sku_id)
+
+
+    })
+
+
+    function brand_pages(site_id=null,brand_id=null,page=1,per_page=25){
+      console.log('brand_pages()')
+      console.log('Site ID: '+site_id)
+      console.log('Brand ID: '+brand_id)
+      build_pages(section='brand_view',site_id=site_id,brand_id=brand_id,page=page,per_page=per_page)
+    };
+
+    function build_pages(section,site_id,brand_id,page,per_page){
+      console.log('build_pages()')
+      console.log('Site ID: '+site_id)
+      console.log('Brand ID: '+brand_id)
+      loadPages(site_id=site_id,brand_id=brand_id,page=page,per_page=per_page).then(result => {
+            console.log(result)
+            var count = result['count'];
+            write_pages(pages=result['pages'],section=section)
+            pagination(per_page=per_page,page=page,count=count,container=section);
+          }
+        )
+    };
+
+
+
+
+    function Pages(section,page=1,per_page=25){
+      //console.log('Pages()')
+          loadPages(section=section,page=page,per_page=per_page).then(result => {
+            //console.log(section)
+            console.log('test test test')
+            console.log(result)
+            var count = result['count'];
+            //console.log(count)
+            write_pages(pages=result['pages'],section=section)
+            pagination(per_page=per_page,page=page,count=count,container=section);
+          }
+        )
+      };
+
+    $('#page_view').on('click','.reload',function(){
+      console.log('reload page')
+      var page_id = $('#page_view').find('.page_id').html()
+      $('#page_view').find('.current').addClass('hidden');
+      $('#page_view').find('.updating').removeClass('hidden');
+      console.log('Page id: '+page_id)
+      reload_page(page_id=page_id).then(page => {
+        console.log('Page: '+page)
+        if(page != 'fail'){
+          write_page_view(page)
+        };
+        $('#page_view').find('.updating').addClass('hidden');
+        $('#page_view').find('.current').removeClass('hidden');
+
+
+      })
+    })
+
+    function reload_page(page_id){
+      return new Promise((resolve,reject) => {
+        $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.reload_page') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'page_id':page_id},null,'\t'),
+                success: function(result){
+                    resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('reload_page error: '+error)
+                }
+            })
+      })
+    }
+
+
+    // $('.reload').click(function(){
+    //     //console.log('reload')
+    //     var section = $(this).parentsUntil('#sections','.section').attr('id');
+    //     var content_section = $(this).parentsUntil('.content','.content_section').attr('id');
+    //     var content_section = content_section.replace(section+'_',"")
+    //     var id_name = content_section+'_id';
+    //     var id_value = $(this).parentsUntil('.content','.content_section').find('.'+id_name).html();
+
+
+    //     //console.log(section)
+    //     // console.log(content_section)
+    //     // console.log(id_name)
+    //     // console.log(id_value)
+
+    //     if(content_section == 'page'){
+    //         var foreign_id = $(this).parentsUntil('.content','.content_section').find('.foreign_id').html()
+    //         var data = [{'id':section+'_foreign_id','value':foreign_id,'class':'text'},{'id':section+'_page_id','value':id_value,'class':'text'}]
+    //         toServer(section=section,data=data)
+    //     };
+    //     //Page(page_id=)
+    // })
+
+
+
+    //validate
+    function flagInput(input_id,validation){
+        if(validation == 'pass'){
+            $('#'+input_id).addClass('is-valid');
+        }else{
+            $('#'+input_id).addClass('is-invalid');
+        };
+    };
+
+
+
+    function validateForm(section){
+        // console.log('validateForm()')
+        return new Promise((resolve,reject) => {
+            try{
+                var inputs = $('#'+section).find('form').find(':input').not(':button:not(.button_input)');
+                console.log(inputs)
+                // console.log(inputs)
+            }catch{
+                reject('no inputs')
+            };
+
+            // console.log(section)
+            if(['walmart'].includes(section)){
+                var page_id = $('#'+section).find('.page_id').html();
+                // console.log(page_id)
+                // console.log(section)
+                if(page_id == ''){
+                    var page_id = 'None';
+                }
+
+                var current_page = {'id':section+'_page_id','value':page_id,'class':'string','validation':'pass'}
+            }else if(['dashboard','brand'].includes(section)){
+              var selected_sites = $('#'+section).find('.select_site.border-success');
+
+              var scrape_sites_array = [];
+
+              for(i=0;i<selected_sites.length;i++){
+                var site = selected_sites[i];
+                var site_id = $(site).attr('id').split('_')[2];
+                scrape_sites_array.push(site_id);
+              };
+
+              // console.log(scrape_sites_array)
+              // console.log(scrape_sites_array.length)
+              if(scrape_sites_array.length == 0){
+                var scrape_sites = {'id':section+'_site_id','value':null,'class':'list','validation':'fail'};
+              }else{
+                var scrape_sites = {'id':section+'_site_id','value':scrape_sites_array,'class':'list','validation':'pass'};
+              };
+
+              // console.log('Scrape sites: '+scrape_sites)
+
+            }
+
+            var promises = [];
+            var ids = [];
+            var values = [];
+            var classes = [];
+            for(i=0;i<inputs.length;i++){
+                var element = $(inputs).eq(i)
+                var id = $(element).attr('id');
+                ids.push(id);
+                var input_class = $(element).attr('class').split(/\s+/)[1];
+                classes.push(input_class);
+                var validation_function = 'validate'+input_class[0].toUpperCase() + input_class.substring(1);
+                var value = $(element).val();
+                values.push(value);
+                // console.log(validation_function)
+                // console.log(value)
+                var promise = window[validation_function](string=value);
+                promises.push(promise);
+            };
+            // console.log(promises)
+
+            Promise.all(promises).then(result => {
+                // console.log(result)
+                var output = [];
+                for(i=0;i<promises.length;i++){
+                    var id = ids[i];
+                    var input_class = classes[i];
+                    var value = values[i];
+                    var validation = result[i];
+                    // console.log(validation)
+                    flagInput(input_id=id,validation=validation);
+                    var dict = {'id':id,'value':value,'class':input_class,'validation':validation};
+                    output.push(dict);
+                };
+                if(current_page != undefined){
+                  output.push(current_page);
+                };
+
+                if(scrape_sites != undefined){
+                  output.push(scrape_sites)
+                };
+
+                resolve(output)
+            })
+
+        })
+    };
+
+    function validateOldPsw(string){
+      return new Promise((resolve,reject) => {
+
+      })
+    }
+
+
+    function validateString(string){
+        return new Promise((resolve,reject) => {
+              try{
+                var string_length = string.length;
+              }catch(error){
+                resolve('fail')
+              };
+
+              if(string.length > 0 && string != 'None'){
+                resolve('pass')
+              }else{
+                resolve('fail')
+              };
+            })};
+
+    function validateText(string){
+        return new Promise((resolve,reject) => {
+              try{
+                var string_length = string.length;
+              }catch(error){
+                resolve('pass')
+              };
+
+              if(string.length <= 100){
+                resolve('pass')
+              }else{
+                resolve('fail')
+              };
+
+          })};
+
+    function validateEmail(string){
+        return new Promise((resolve,reject) => {
+          try{
+            var email = string.toLowerCase();
+
+            var reg_ex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            var validEmail = reg_ex.test(email);
+
+            if(validEmail == true){
+              resolve('pass')
+            }else{
+              resolve('fail')
+            };
+          }catch(error){
+            resolve('fail')
+          }})};
+
+
+    //submit
+    function submitForm(section,data){
+        console.log('submitForm()')
+        console.log(section)
+        console.log(data)
+        return new Promise((resolve,reject) => {
+            if(data['result'] == 'fail'){
+                resolve({'section':section,'result':data['result'],'id':data['id']})
+            }else{
+                startSubmit(section);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('main.submit_form') }}",
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({'section':section,'data':data},null,'\t'),
+                    success: function(result){
+                      //console.log(result)
+                      resolve(result)
+                    },error: function(error){
+                      reject('fail')
+                      console.log('submit form error: '+error)
+                    }
+                })
+            }
+
+    })};
+
+    function toTitleCase(str) {
+      return str.replace(/\w\S*/g, function(txt){
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    };
+
+
+
+
+    function resultForm(section,result){
+        console.log(section)
+        console.log(result)
+          console.log(result)
+          try{
+            var id = result['id'];
+          }catch{
+            var id = 'None';
+          };
+
+          $('#'+section).find(':input').not(':button').val('')
+
+          var result = result['result'];
+          console.log('ID: '+id)
+          stopSubmit(section)
+
+          if(result == 'pass'){
+            hideAlerts(section=section)
+            $('#'+section).find(':input.is-invalid').removeClass('is-invalid');
+              if(section == 'login'){
+                  window.location.href = "{{ url_for('main.index') }}"
+              }else if(section == 'access'){
+                  changeSection('homepage')
+                  showAlert('homepage','access')
+              }else if(section == 'forgot_password'){
+                  showAlert('forgot_password','sent')
+              }else if(section == 'register'){
+                  changeSection('login')
+                  showAlert('login','success')
+              }else if(site_pages.includes(section) && '{{ current_user.is_authenticated }}' == 'True'){
+                  console.log('ID: '+id)
+                  console.log('User ID: '+'{{ current_user.id }}')
+                    Page(page_id=id,section=section)
+                    Pages(section=section);
+
+                  $('#'+section).find('.show_all.hidden').removeClass('hidden');
+                  $('#'+section).find('.submit_form').val('Reload');
+                  $('#'+section).find('.page_id').html(id);
+              }else if(section == 'brand'){
+                changeSection('brand_list')
+                build_brand_list();
+              }else if(section == 'change_password'){
+                showAlert('change_password','success')
+              }else if(section == 'reset_password'){
+                changeSection('login')
+                showAlert('login','reset_password')
+              };
+          }else{
+              $('#'+section).find(':input.is-valid').removeClass('is-valid');
+              if(section == 'register'){
+                  showAlert('register',id)
+              }else if(section == 'login'){
+                console.log('login fail')
+                console.log(section)
+                console.log(result)
+                showAlert(section,result)
+              }else{
+                  showAlert(section,'error')
+              };
+          };
+
+
+    }
+
+
+
+
+    function build_sitebrands(sku_id,section_id){
+      load_sitebrands(sku_id,section_id).then(result => {
+        write_sitebrands(section_id=result['section_id'],sitebrands=result['sitebrands'])
+
+      })
+    };
+
+    function write_sitebrands(section_id,sitebrands){
+      console.log('write_sitebrands()')
+      // console.log(sitebrands)
+      var promises = [];
+      for(i=0;i<sitebrands.length;i++){
+        var sitebrand = sitebrands[i];
+        var site_id = sitebrand['site_id']
+        var promise = fetch_site_name(site_id=site_id);
+        promises.push(promise);
+      };
+      //console.log('Promises: '+promises)
+
+      Promise.all(promises).then(site_names => {
+
+        //console.log(site_names)
+        sitebrand_dicts = [];
+        for(i=0;i<site_names.length;i++){
+          var site_name = site_names[i];
+          var sitebrand_id = sitebrands[i]['sitebrand_id'];
+          var dict = {'site_name':site_name,'sitebrand_id':sitebrand_id};
+          sitebrand_dicts.push(dict);
+        }
+        return sitebrand_dicts
+      }).then(sitebrand_dicts => {
+        var html_array = [];
+        for(i=0;i<sitebrand_dicts.length;i++){
+          var dict = sitebrand_dicts[i];
+          var sitebrand_id = dict['sitebrand_id']
+          var site_name = dict['site_name']
+          //console.log('Site name: '+site_name)
+          //console.log('Sitebrand_id: '+sitebrand_id)
+          var html = '<div class="row py-4"><p id="sitebrand_id_'+sitebrand_id+'" class="fs-2 reversed-primary-color text-center view_page" style="cursor:pointer;">'+site_name+'</p></div>';
+          html_array.push(html);
+        };
+        var html = html_array.join('');
+        $('#'+section_id).find('ul.sitebrand_list').html(html);
+      })
+
+    };
+
+
+
+    function load_sitebrands(sku_id,section_id){
+      return new Promise((resolve,reject) => {
+        $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_sitebrands') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'sku_id':sku_id,'section_id':section_id},null,'\t'),
+                success: function(result){
+                    resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('load_sitebrands error: '+error)
+                }
+            })
+
+      })
+    };
+
+
+
+    function build_brand_list(){
+      load_brand_list().then(brands => {
+        write_brand_list(brands)
+      })
+    }
+
+    function write_brand_list(brands){
+      var html_array = [];
+      for(i=0;i<brands.length;i++){
+        var brand = brands[i];
+        var html = '<div class="row py-4"><span class="hidden brand_id">'+brand['brand_id']+'</span><p class="fs-2 reversed-primary-color text-center brand_view" style="cursor:pointer;">'+brand['name']+'</p></div>';
+        html_array.push(html);
+      };
+      var html = html_array.join('');
+      $('#brand_list_list').html(html);
+    };
+
+
+    $('#brand_list_list').on('click','.brand_view',function(){
+      console.log('test')
+      var brand_id = $(this).siblings('.brand_id').html();
+      console.log('Brand id: '+brand_id)
+      build_brand_view(brand_id);
+      changeSection('brand_view')
+    })
+
+
+
+    function fetch_site_name(site_id){
+        console.log('fetch_site_name()')
+        console.log('site_id: '+site_id)
+        return new Promise((resolve,reject) => {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.fetch_site_name') }}",
+                data: JSON.stringify({'site_id':site_id},null,'\t'),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(result){
+                  console.log(result)
+                  resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('fetch site name error: '+error)
+                }
+            })
+    })
+    }
+
+    function load_brand_list(){
+        return new Promise((resolve,reject) => {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_brand_list') }}",
+                contentType: 'application/json;charset=UTF-8',
+                success: function(result){
+                  resolve(result['brands'])
+                },error: function(error){
+                  reject('fail')
+                  console.log('load brand list error: '+error)
+                }
+            })
+    })};
+
+
+
+    function build_sku_view(sku_id){
+      build_sitebrands(sku_id=sku_id,section_id='sku_view')
+      load_sku_view(sku_id).then(sku => {
+        write_sku_view(sku)
+      })
+    };
+
+    function write_sku_view(sku){
+      $('#sku_view').find('.sku_name').html(sku['name'])
+      $('#sku_view').find('.sku_id').html(sku['sku_id'])
+      $('#sku_view').find('.sku_image').html('<img src="/static/images/'+sku['image_id']+'.jpg" class="p-3">')
+    };
+
+    function load_sku_view(sku_id){
+        return new Promise((resolve,reject) => {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_sku') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'sku_id':sku_id},null,'\t'),
+                success: function(result){
+                  resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('load sku error: '+error)
+                }
+            })
+    })};
+
+    $('#sku_view').on('click','.view_page',function(){
+      console.log('test view page')
+      var sitebrand_id = $(this).attr('id').split('_')[2];
+      var sku_id = $('#sku_view').find('.sku_id').html();
+      fetch_page_id(sku_id=sku_id,sitebrand_id=sitebrand_id).then(page_id => {
+        build_page_view(page_id=page_id)
+      })
+      changeSection('page_view')
+    })
+
+    function build_page_view(page_id){
+        build_images(page_id);
+        load_page_view(page_id).then(page => {
+          write_page_view(page)
+        })
+    };
+
+    function load_page_view(page_id){
+      return new Promise((resolve,reject) => {
+        $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_page') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'page_id':page_id},null,'\t'),
+                success: function(result){
+                  resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('load brand error: '+error)
+                }
+            })
+      })
+    }
+
+    function write_page_view(page){
+      console.log(page)
+      $('#page_view').find('.sku_name').html(page['sku_name'])
+      $('#page_view').find('.page_id').html(page['page_id'])
+      $('#page_view').find('.site_name').html(page['site_name'])
+      $('#page_view').find('.modified').html(displayDateTimeTZ(page['modified']))
+    };
+
+    function build_images(page_id){
+      load_images(page_id).then(images => {
+        write_images(images);
+      });
+    }
+
+    function load_images(page_id){
+      return new Promise((resolve,reject) => {
+        $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_images') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'page_id':page_id},null,'\t'),
+                success: function(result){
+                  console.log(result)
+                  resolve(result['image_ids'])
+                },error: function(error){
+                  reject('fail')
+                  console.log('load brand error: '+error)
+                }
+            })
+      })
+    }
+
+    function write_images(image_ids){
+      console.log(image_ids)
+      var html_array = [];
+      for(i=0;i<image_ids.length;i++){
+        var image_id = image_ids[i];
+        var html = '<li class="list-group-item text-center"><img src="/static/images/'+image_id+'.jpg" class="p-3"></li>';
+        html_array.push(html);
+      };
+      var html = html_array.join('');
+      $('#page_view').find('.list_images').html(html);
+
+    }
+
+    function fetch_page_id(sku_id,sitebrand_id){
+     return new Promise((resolve,reject) => {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.fetch_page_id') }}",
+                data: JSON.stringify({'sku_id':sku_id,'sitebrand_id':sitebrand_id},null,'\t'),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(result){
+                  resolve(result['page_id'])
+                },error: function(error){
+                  reject('fail')
+                  console.log('fetch page id error: '+error)
+                }
+            })
+    })
+    }
+
+
+
+
+
+
+    function build_brand_view(brand_id){
+      build_skus(brand_id=brand_id,page=1,per_page=25,section='brand_view')
+      load_brand_view(brand_id).then(brand => {
+        console.log('Brand: '+brand)
+        write_brand_view(brand)
+      })
+    };
+
+    function load_brand_view(brand_id){
+        return new Promise((resolve,reject) => {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_brand') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'brand_id':brand_id},null,'\t'),
+                success: function(result){
+                  resolve(result)
+                },error: function(error){
+                  reject('fail')
+                  console.log('load brand error: '+error)
+                }
+            })
+    })};
+
+
+    function write_brand_view(brand){
+      return new Promise((resolve,reject) => {
+        var brand_name = toTitleCase(brand['name']);
+        $('#brand_view_name').html(brand['name']);
+      })
+    };
+
+
+
+
+    //admin
+    $('#admin').on('click','.approve,.reject',function(){
+        var user_id = $(this).parentsUntil('tbody','tr').eq(0).attr('id').split('_')[1];
+        if($(this).hasClass('approve')){
+            var action = 1;
+        }else{
+            var action = 2;
+        };
+        var data = [{'id':'admin_action','value':action},{'id':'admin_user_id','value':user_id}];
+        submitForm(section='admin',data=data).then(result => {
+            if(result['result'] == 'pass'){
+                buildAdmin();
+            };
+        })
+    });
+
+
+    //general
+    function fill(){
+        activeSection().then(section => {
+            fillForm(section=section);
+        });
+        return 'filled'
+    };
+
+    function fillForm(section){
+        if(section == 'access'){
+            $('#access_first_name').val('Jacob');
+            $('#access_last_name').val('Winick');
+            $('#access_email').val('jlwinick@gmail.com');
+            $('#access_company_name').val('SpeedyPO');
+            $('#access_method').val('0');
+        }
+    };
+
+    function startSubmit(section){
+        console.log('startSubmit()')
+        console.log(section)
+        $('#'+section).find('.submit_box').children('.loading_spinner').children().eq(0).removeClass('hidden');
+        $('#'+section).find('.submit_box').children('.submit').addClass('hidden');
+        $('#'+section).find('.content').addClass('hidden');
+    };
+
+    function stopSubmit(section){
+        console.log('stopSubmit()')
+        console.log(section)
+        $('#'+section).find('.submit_box').children('.loading_spinner').children().eq(0).addClass('hidden')
+        $('#'+section).find('.submit_box').children('.submit').removeClass('hidden');
+        $('#'+section).find('.content').removeClass('hidden');
+    };
+
+    function showAlert(section,alert){
+        $('#'+section).find('.alerts').removeClass('hidden');
+        $('#'+section).find('.alerts').children('.'+alert).removeClass('hidden');
+        $('#'+section).find('.alerts').children().not('.'+alert).addClass('hidden');
+        $([document.documentElement, document.body]).animate({scrollTop: 0}, 0);
+    };
+
+    function hideAlerts(section){
+        $('#'+section).find('.alerts').addClass('hidden');
+        $('#'+section).find('.alerts').children().addClass('hidden');
+    };
+
+    function deselectSites(seection){
+
+      var selected_sites = $('#'+section).find('.select_site.border-success');
+
+      for(i=0;i<selected_sites.length;i++){
+        var site = selected_sites.eq(i);
+        $(site).removeClass('border-success');
+        $(site).addClass('primary-border');
+        $(site).find('.badge').not('.hidden').addClass('hidden');
+      };
+
+    };
+
+    function loadRegister(user){
+        var email = user['email'];
+        $('#register_email').val(email);
+    };
+
+
+    function loadAdmin(page,per_page){
+        return new Promise((resolve,reject) => {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('main.load_admin') }}",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({'page':page,'per_page':per_page},null,'\t'),
+                success: function(result){
+                  resolve({'requests':result['access_requests'],'page':page,'per_page':per_page,'count':result['count']})
+                },error: function(error){
+                  reject('fail')
+                  console.log('load admin error: '+error)
+                }
+            })
+    })};
+
+
+    function writeAdmin(requests){
+        var html_array = [];
+        for(i=0;i<requests.length;i++){
+            var request = requests[i];
+            var html = '<tr id="user_'+request['user_id']+'"><td><button type="button" class="btn btn-success approve">Approve</button></td><td><button type="button" class="btn btn-danger reject">Reject</button></td><td>'+request['first_name']+'</td><td>'+request['last_name']+'</td><td>'+request['email']+'</td><td>'+request['company_name']+'</td></tr>';
+            html_array.push(html);
+        };
+        var html = html_array.join('')
+        $('#admin').find('tbody').html(html)
+    };
+
+    function buildAdmin(page=1,per_page=5){
+        loadAdmin(page=page,per_page=per_page).then(result => {
+            writeAdmin(result['requests']);
+            var count = result['count'];
+            pagination(per_page=result['per_page'],page=result['page'],count=count,container='admin');
+        });
+    };
+
+    $('.pag_section').on('click','.pag',function(){
+        var active_page = parseInt($(this).parentsUntil('.pag_section').find('.pag.active').html());
+        var pages = $(this).parentsUntil('.pag_section').find('.pag').not('.static');
+        var page_count = pages.length;
+        var per_page = parseInt($(this).parentsUntil('.pag_section').find('.rows').val());
+
+
+        if($(this).hasClass('next')){
+            var new_page = active_page+1;
+        }else if($(this).hasClass('prev')){
+            var new_page = active_page-1;
+        }else{
+           var new_page = parseInt($(this).html());
+        };
+
+
+        if(new_page == active_page){
+            console.log('current page')
+        }else{
+            if(new_page == 1){
+                $(this).parentsUntil('.pag_section').find('.pag.prev').not('.hidden').addClass('hidden');
+            }else{
+                $(this).parentsUntil('.pag_section').find('.pag.prev.hidden').removeClass('hidden');
+            };
+
+            if(new_page == page_count){
+                $(this).parentsUntil('.pag_section').find('.pag.next').not('.hidden').addClass('hidden');
+            }else{
+                $(this).parentsUntil('.pag_section').find('.pag.next.hidden').removeClass('hidden');
+            };
+
+            var n = new_page-1
+            $(pages).eq(n).addClass('active');
+            $(pages).not(':eq('+n+')').find('.active').removeClass('.active');
+            activeSection().then(section => {
+                window['build_'+section](page=new_page,per_page=per_page)
+            });
+        };
+
+    });
+
+    $('#sections').on('change','.rows',function(){
+        var per_page = $(this).val();
+        var section = $(this).parentsUntil('#sections','.section').attr('id');
+
+        var func = 'build_'+section;
+
+        activeSection().then(section => {
+                window[func](page=1,per_page=per_page)
+            });
+    })
+
+
+    function pagination(per_page,page,count,container){
+        // console.log(per_page)
+        // console.log(page)
+        // console.log(count)
+        // console.log(container)
+        if(per_page>count){
+            var quo = 1;
+        }else{
+            var quo = Math.ceil(count/per_page);
+        };
+
+
+        var prev_page = parseInt(page)-1
+        var previous_page = prev_page.toString()
+
+        var meat = [];
+
+        for(i=0;i<quo;i++){
+            var numb = i+1;
+            if(numb==page){
+                var html = '<p class="pag active">'+numb+'</p>';
+            }else{
+                var html = '<p class="pag">'+numb+'</p>';
+            };
+            meat.push(html)
+        };
+
+        var pagination_html = meat.join('');
+
+
+        var next_page = parseInt(page)+1
+        var next_page = next_page.toString()
+
+        var whole = count.toString();
+
+        var start = 1+(page-1)*per_page;
+
+        var end = page*per_page;
+        if(end > count){
+            var end = count;
+        };
+
+        var rows_html = 'Showing '+start+'-'+end+' of '+whole;
+
+        var container_id = '#'+container;
+
+        $(container_id).find('.pag_section').find('.pages').html(pagination_html)
+        $(container_id).find('.pag_section').find('.showing_rows').html(rows_html)
+        if(page==1){
+          $(container_id).find('.pag_section').find('.prev').addClass('hidden');
+        };
+        if(per_page > count){
+            $(container_id).find('.pag_section').find('.next').addClass('hidden');
+        };
+
+        return container_id
+
+    };
+
+    function todaysDate(){
+    var d = new Date();
+    var month = d.getMonth();
+    var month_actual = month + 1;
+
+    if (month_actual < 10) {
+      month_actual = "0"+month_actual;
+      }
+
+    var day_val = d.getDate();
+    if (day_val < 10) {
+      day_val = "0"+day_val;
+      }
+
+    return(d.getFullYear()+"-"+ month_actual +"-"+day_val)
+}
+
+    function displayDate(string){
+        string = new Date(string);
+        var month = string.getMonth()+1;
+        var day = string.getDate();
+        var year = string.getFullYear().toString().substr(-2);
+        var output = month+"-"+day+"-"+year
+        return output
+        };
+
+    function displayDateTimeTZ(string){
+        string = new Date(string);
+        var month = string.getMonth()+1;
+        var day = string.getDate();
+        var year = string.getFullYear().toString().substr(-2);
+        var hour = string.getHours();
+        if(hour < 12){
+            var a = 'AM';
+        }else if(hour == 12){
+            var a = 'PM';
+        }else{
+            var a = 'PM';
+            var hour = hour-12;
+        };
+        var minute = string.getMinutes();
+        if(minute < 10 ){
+            var minute = '0'+minute;
+        };
+        var result = month+"-"+day+"-"+year+" at "+hour+':'+minute+' '+a;
+        return result
+    };
+
+
+
+    function refresh(){
+
+        if('{{current_user.id}}' == 1){
+            buildAdmin();
+            build_brand_list();
+        };
+
+
+        if('{{ user }}' != 'None'){
+          $('.fill_email').val(user['email'])
+        }
+
+        if('{{ code }}' != 'None'){
+            $('.fill_code').val('{{ code }}')
+        };
+
+
+        //console.log('User ID: '+'{{ current_user.is_authenticated }}')
+        //console.log('Site Pages: '+site_pages)
+        //console.log('{{ current_user.is_authenticated }}' == true)
+        // if('{{ current_user.is_authenticated }}' == 'True'){
+        //   //console.log('refresh authenticated')
+        //   for(i=0;i<site_pages.length;i++){
+        //     var site = site_pages[i];
+        //     //console.log('Site: '+site)
+        //     Pages(section=site);
+        //   };
+        // };
+
+    };
+
+
+
+
+    var user = JSON.parse('{{user | tojson}}');
+    //document ready
+    $(document).ready(function(){
+        if('{{section}}' != 'None'){
+            changeSection('{{section}}')
+        }else{
+            changeSection('homepage')
+        };
+
+        // activeSection().then(section => {
+        //   if(site_pages.includes(section)){
+        //     $('#'+section).find('.content').find('.site').removeClass('hidden');
+        //   }
+        // })
+        refresh();
+    });
+
+
+</script>
+{% endblock scripts %}

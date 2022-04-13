@@ -1,0 +1,9 @@
+Dear {{ first_name }},
+ 
+Welcome to SKU Perfect. Please use the following link to register.
+ 
+{{ url_for('main.index',section='register',code=code) }}
+ 
+Sincerely,
+ 
+The SKU Perfect Team
